@@ -57,6 +57,8 @@ npm run bundle              # writes build/main.jsbundle
 | `macos-app/metro.config.js` | Watches the repository root so `../src` is bundled, and resolves every package from `macos-app/node_modules` only, so the shared code never picks up the Expo app's React Native 0.86. |
 | `macos-app/macos/HL7DecoderMac-macOS/AppDelegate.swift` | SwiftUI app with one window that hosts the React Native view. |
 | `macos-app/macos/HL7DecoderMac-macOS/Assets.xcassets/AppIcon.appiconset` | The app icon at every macOS size, drawn by `tools/make_icon.py` (see [App icon](#app-icon)). |
+| `macos-app/macos/HL7DecoderMac-macOS/HelpWindow.swift` | The **Help › HL7 Decoder Help** menu item (⌘?) and the window that shows the help page (see [Help](#help)). |
+| `macos-app/macos/HL7DecoderMac-macOS/Help/` | The help page and its screenshots, generated from the user guide by `tools/build_help.js`. Added to the app as a folder, so new files in it are bundled without changing the Xcode project. |
 | `macos-app/macos/HL7DecoderMac-macOS/HL7MacBridge.m` | Native module for the clipboard (`NSPasteboard`) and the Open panel (`NSOpenPanel`). Files are read off the main thread; UTF-8, UTF-16 and UTF-32 with a byte-order mark, plain UTF-8 and Latin-1 are all read correctly. |
 | `macos-app/macos/HL7DecoderMac-macOS/HL7DecoderMac.entitlements` | Debug entitlements: App Sandbox, read access to files the user picks, and network access to reach Metro. |
 | `macos-app/macos/HL7DecoderMac-macOS/HL7DecoderMac-Release.entitlements` | Release entitlements: the same without network access, since the JavaScript is bundled and the app never goes online. |
@@ -66,6 +68,20 @@ npm run bundle              # writes build/main.jsbundle
 Expo modules are not used on macOS. Their macOS support is experimental and tied to Expo SDK versions that match React Native 0.83, so the three things the screen needs from the platform (read the clipboard, write the clipboard, open files) go through the small native module instead.
 
 `src/ui/theme.ts` uses Menlo for monospaced text on macOS as on iOS.
+
+## Help
+
+**Help › HL7 Decoder Help** (⌘?) opens the user guide in a window of its own. `HelpWindow.swift` replaces the Help menu's default item (which only says help isn't available) and shows `Help/index.html` from the app bundle in a web view. Links within the page scroll it; links to anything else, such as the other docs on GitHub, open in the default browser. The page follows the system's light or dark appearance.
+
+The page is generated from [user-guide.md](user-guide.md), so there is one guide to keep up to date:
+
+```bash
+node tools/build_help.js
+```
+
+It converts the guide to HTML, makes a few edits so it reads as Mac help (the title, "click" for "tap", "Return" for "Enter", and no phone layout or install steps; see `MAC_EDITS` in the script), adds a contents bar of the sections, and copies the screenshots it uses into `Help/images`. `npm test` fails if the committed page no longer matches the guide.
+
+The page is shown in a window rather than Apple's Help Viewer, which would need a separate indexed help book. That means the Help menu's search box finds menu items but not topics in the guide.
 
 ## App icon
 

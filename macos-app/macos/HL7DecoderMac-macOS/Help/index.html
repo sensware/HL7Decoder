@@ -1,0 +1,109 @@
+<!doctype html>
+<!-- Generated from docs/user-guide.md by tools/build_help.js. Edit the guide, not this file. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light dark">
+<title>HL7 Decoder Help</title>
+<style>
+:root { --text: #0F172A; --muted: #64748B; --line: #E2E8F0; --panel: #F8FAFC; --bg: #FFFFFF; --accent: #0F766E; --accent-soft: #CCFBF1; }
+@media (prefers-color-scheme: dark) {
+  :root { --text: #E2E8F0; --muted: #94A3B8; --line: #334155; --panel: #1E293B; --bg: #0F172A; --accent: #2DD4BF; --accent-soft: #134E4A; }
+}
+body { font: 14px/1.55 -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text); background: var(--bg); margin: 0; }
+main { max-width: 760px; margin: 0 auto; padding: 24px 32px 48px; }
+h1 { font-size: 26px; margin: 8px 0 12px; }
+h2 { font-size: 20px; margin: 32px 0 8px; padding-top: 8px; border-top: 1px solid var(--line); }
+h3 { font-size: 16px; margin: 24px 0 6px; }
+nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 20px; }
+nav a { font-size: 12px; padding: 3px 10px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); text-decoration: none; }
+a { color: var(--accent); }
+code { font: 12.5px Menlo, monospace; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+table { border-collapse: collapse; width: 100%; margin: 10px 0 16px; }
+th, td { text-align: left; vertical-align: top; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
+img { max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; }
+figure { margin: 12px 0 20px; }
+li { margin: 3px 0; }
+</style>
+</head>
+<body>
+<main>
+<h1 id="hl7-decoder-help">HL7 Decoder Help</h1>
+<nav>
+<a href="#on-a-mac">On a Mac</a>
+<a href="#getting-messages-in">Getting messages in</a>
+<a href="#reading-a-message">Reading a message</a>
+<a href="#the-tabs">The tabs</a>
+<a href="#hl7-versions">HL7 versions</a>
+<a href="#editing">Editing</a>
+<a href="#tips">Tips</a>
+</nav>
+<p>HL7 Decoder explains HL7 v2 messages. Paste or open a message and it tells you what every part means, whether anything is wrong, and what the message says in plain English. It runs on phones, tablets, in a web browser and as a Mac app.</p>
+<figure><img src="images/overview.png" alt="The app on a wide screen"></figure>
+<p>On a wide screen (tablet, laptop) the app has three columns:</p>
+<ol><li><strong>Messages</strong> — every message you have loaded. The dot shows its state: green for valid, amber for warnings, red for errors.</li><li><strong>The message</strong> — the text of the open message, coloured by delimiter, with details of whatever you click underneath.</li><li><strong>Tabs</strong> — Fields, Summary, Validation and JSON views of the same message.</li></ol>
+<h2 id="on-a-mac">On a Mac</h2>
+<p>The Mac app works the same way as the others. It opens in a window wide enough for the three-column layout, and narrowing the window below 900 points switches to the stacked layout.</p>
+<ul><li><strong>Paste</strong> reads text you copied in any Mac app.</li><li><strong>Open file</strong> shows the standard macOS Open panel. Hold ⌘ to pick several files. The app can only read files you choose there.</li><li><strong>Copy JSON</strong> puts the JSON on the Mac clipboard, ready to paste into another app.</li><li><strong>Help › HL7 Decoder Help</strong> (⌘?) opens this guide in its own window.</li></ul>
+<h2 id="getting-messages-in">Getting messages in</h2>
+<table>
+<thead><tr><th>Button</th><th>What it does</th></tr></thead>
+<tbody><tr><td><strong>Paste</strong></td><td>Reads the clipboard and adds every message in it.</td></tr><tr><td><strong>Open file</strong></td><td>Pick one or more files (<code>.hl7</code>, <code>.txt</code>, anything plain text). Every message in them is added.</td></tr><tr><td><strong>New</strong></td><td>Adds a blank message skeleton and opens it for editing.</td></tr><tr><td><strong>Samples</strong></td><td>Replaces the list with five example messages: an admission, lab results, an appointment, an error acknowledgement and a deliberately broken message.</td></tr></tbody>
+</table>
+<p>Files and pastes can hold many messages. A new message starts at each <code>MSH</code> line, batch wrappers (<code>FHS</code>, <code>BHS</code>, <code>BTS</code>, <code>FTS</code>) are skipped, and MLLP framing characters are ignored. Lines can end in CR, LF or CRLF. If nothing that looks like HL7 is found, a notice says so and nothing is added.</p>
+<p>The app does not send messages anywhere. Everything is decoded on your device.</p>
+<h2 id="reading-a-message">Reading a message</h2>
+<p>The message is shown as written, with the separators coloured so the structure stands out:</p>
+<table>
+<thead><tr><th>Colour</th><th>Character</th><th>Separates</th></tr></thead>
+<tbody><tr><td>Teal, bold</td><td><code>MSH</code>, <code>PID</code> …</td><td>Segment IDs</td></tr><tr><td>Blue</td><td><code>|</code></td><td>Fields</td></tr><tr><td>Orange</td><td><code>^</code></td><td>Components</td></tr><tr><td>Purple</td><td><code>~</code></td><td>Repeats of a field</td></tr><tr><td>Green</td><td><code>&amp;</code></td><td>Subcomponents</td></tr></tbody>
+</table>
+<p>(Messages that declare different separators in MSH-2 are coloured by their own characters.)</p>
+<p><strong>Click any field</strong> to select it. The panel underneath shows:</p>
+<ul><li>its <strong>path</strong> (for example <code>OBX-5</code>) and <strong>name</strong> (Observation Value),</li><li>its <strong>datatype</strong>, the <strong>code table</strong> it uses, and whether it is <strong>required</strong> or <strong>repeating</strong>,</li><li>the <strong>value</strong> with escape sequences decoded, so <code>\T\</code> shows as <code>&amp;</code>,</li><li>its <strong>meaning</strong>: the description of a code, a readable date, or a name or address put together,</li><li>its <strong>components</strong>. Click one to drill in further.</li></ul>
+<figure><img src="images/inspect.png" alt="Clicking a field"></figure>
+<p>Click a segment ID (such as <code>PID</code>) to select the whole segment.</p>
+<p>Long lines scroll sideways.</p>
+<h3 id="paths">Paths</h3>
+<p>Every part of a message has a path:</p>
+<table>
+<thead><tr><th>Path</th><th>Means</th></tr></thead>
+<tbody><tr><td><code>PID</code></td><td>The PID segment</td></tr><tr><td><code>PID-5</code></td><td>Field 5 of PID (Patient Name)</td></tr><tr><td><code>PID-5.1</code></td><td>Component 1 of that field (Family Name)</td></tr><tr><td><code>PID-3[2]</code></td><td>The second repeat of PID-3</td></tr><tr><td><code>PID-3[2].4.1</code></td><td>Subcomponent 1 of component 4 of that repeat</td></tr><tr><td><code>OBX[2]-5</code></td><td>Field 5 of the second OBX segment</td></tr></tbody>
+</table>
+<p><code>MSH.9.2</code> (dots instead of a dash) and lowercase are accepted too.</p>
+<p>To jump to a path, type it in <strong>Go to path</strong> and press Return or <strong>Go</strong>. The field is selected, highlighted in the message, and scrolled into view in the Fields tab. If the message has nothing at that path, a notice says so.</p>
+<figure><img src="images/goto.png" alt="Go to path"></figure>
+<h2 id="the-tabs">The tabs</h2>
+<h3 id="fields">Fields</h3>
+<p>Every segment as a table: path, name, datatype (with <code>req</code> for required fields), value, and meaning in teal. Components and subcomponents are indented under their field, and repeats are listed as <code>#1</code>, <code>#2</code> and so on. Click a segment header to collapse or expand it, and click a row to select it.</p>
+<p><strong>Show empty</strong> also lists the fields and components the HL7 definition expects but the message leaves blank, in grey. This helps when you are working out where a value should go. <strong>Hide empty</strong> turns it off.</p>
+<figure><img src="images/show-empty.png" alt="Show empty"></figure>
+<h3 id="summary">Summary</h3>
+<p>The message in plain English: who sent it and when, the patient, the visit, orders and tests, each result with its units and reference range, allergies, diagnoses, procedures, appointments, insurance, and the outcome of an acknowledgement.</p>
+<p>Abnormal results and errors are shown in red. Click a line to select the segment it came from.</p>
+<figure><img src="images/summary.png" alt="Summary"></figure>
+<h3 id="validation">Validation</h3>
+<p>Problems found in the message, most serious first:</p>
+<table>
+<thead><tr><th>Level</th><th>Examples</th></tr></thead>
+<tbody><tr><td><strong>Error</strong></td><td>The message doesn't start with MSH. A required field is empty (PID-3 Patient Identifier List). A segment the message type requires is missing (an ADT^A01 needs EVN).</td></tr><tr><td><strong>Warning</strong></td><td>A segment the version doesn't define, or that doesn't belong in this message type. A date, time or number that isn't in HL7 format. A field that repeats but shouldn't. Data past the last defined field.</td></tr><tr><td><strong>Info</strong></td><td>A code that isn't in the HL7 table. These tables follow the latest HL7 release, so an older code may still be fine. A version with no bundled definitions, so the nearest one was used.</td></tr></tbody>
+</table>
+<p>Custom Z-segments (<code>ZXY</code> …) are never flagged. Click an issue to select the field it is about.</p>
+<p>The tab title shows how many errors and warnings there are, and the message list shows a coloured dot for each message.</p>
+<figure><img src="images/validation.png" alt="Validation"></figure>
+<h3 id="json">JSON</h3>
+<p>The decoded message as JSON, with each field's path, name, type, value and meaning. <strong>Copy JSON</strong> puts it on the clipboard.</p>
+<figure><img src="images/json.png" alt="JSON"></figure>
+<h2 id="hl7-versions">HL7 versions</h2>
+<p>The app has definitions for HL7 v2.1, 2.2, 2.3, 2.3.1, 2.4, 2.5, 2.5.1, 2.7.1, 2.8, 2.8.2 and 2.9. It uses the version in MSH-12. When that version isn't bundled it uses the nearest one, so 2.6 is read as 2.5.1 and 2.7 as 2.7.1. With no MSH-12 it uses 2.5.1.</p>
+<p>To read a message as a different version (for example a sender that claims 2.3 but sends 2.5 fields), open the version menu next to <strong>Show empty</strong> and pick one. <strong>Auto (MSH-12)</strong> goes back to the message's own version. The choice applies to every message in the list.</p>
+<figure><img src="images/version.png" alt="Version menu"></figure>
+<h2 id="editing">Editing</h2>
+<p>Click <strong>Edit</strong> above the message to change its text. Everything (the list dot, fields, summary and validation) updates as you type. Click <strong>Done</strong> to go back to the coloured view. <strong>Remove</strong> deletes the open message from the list. It doesn't touch any file you opened.</p>
+<figure><img src="images/edit.png" alt="Editing"></figure>
+<h2 id="tips">Tips</h2>
+<ul><li>If a value looks wrong, check the Validation tab first. A missing or extra <code>|</code> earlier in the line shifts every field after it.</li><li>An empty field and <code>&quot;&quot;</code> are different. <code>&quot;&quot;</code> means &quot;delete the stored value&quot;, and the app shows it as <em>Explicit null</em>.</li><li><code>OBX-5</code> takes its datatype from <code>OBX-2</code>, so a coded result (<code>CWE</code>) shows the code's text, and a numeric one (<code>NM</code>) is checked for being a number.</li></ul>
+</main>
+</body>
+</html>

@@ -12,6 +12,12 @@ struct HL7DecoderMacApp: App {
       ReactNativeView(factory: appDelegate.reactNativeFactory)
     }
     .defaultSize(width: 1280, height: 800)
+    .commands { HelpCommands() }
+
+    Window("HL7 Decoder Help", id: HelpWindow.id) {
+      HelpWindow()
+    }
+    .defaultSize(width: 860, height: 760)
   }
 }
 

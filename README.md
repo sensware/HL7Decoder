@@ -32,7 +32,7 @@ npm install
 npm run web        # browser
 npm run ios        # iOS simulator / Expo Go
 npm run android    # Android emulator / Expo Go
-npm test           # engine and platform tests (67)
+npm test           # engine, platform and help tests (73)
 npm run typecheck
 ```
 
@@ -60,6 +60,7 @@ See [docs/macos.md](docs/macos.md) for details.
 | `src/hl7/schema/*.json` | HL7 definitions per version, plus `tables.json` |
 | `tools/build_schema.py` | Regenerates the JSON from HL7 v2.xml XSDs and table CSVs |
 | `tools/make_icon.py` | Draws the macOS app icon at every size |
+| `tools/build_help.js` | Builds the macOS app's Help page from the user guide |
 | `samples/` | Fictional test messages |
 
 Using the engine on its own:
