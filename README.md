@@ -59,6 +59,7 @@ See [docs/macos.md](docs/macos.md) for details.
 | `src/hl7/` | The decoding engine (no React dependency): parser, paths, schema, decoder, validator, summary, JSON export |
 | `src/hl7/schema/*.json` | HL7 definitions per version, plus `tables.json` |
 | `tools/build_schema.py` | Regenerates the JSON from HL7 v2.xml XSDs and table CSVs |
+| `tools/make_icon.py` | Draws the macOS app icon at every size |
 | `samples/` | Fictional test messages |
 
 Using the engine on its own:

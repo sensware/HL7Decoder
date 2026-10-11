@@ -56,6 +56,7 @@ npm run bundle              # writes build/main.jsbundle
 | `macos-app/index.js` | Entry point. Registers `Decoder` from `../src/Decoder.tsx` as the root component. |
 | `macos-app/metro.config.js` | Watches the repository root so `../src` is bundled, and resolves every package from `macos-app/node_modules` only, so the shared code never picks up the Expo app's React Native 0.86. |
 | `macos-app/macos/HL7DecoderMac-macOS/AppDelegate.swift` | SwiftUI app with one window that hosts the React Native view. |
+| `macos-app/macos/HL7DecoderMac-macOS/Assets.xcassets/AppIcon.appiconset` | The app icon at every macOS size, drawn by `tools/make_icon.py` (see [App icon](#app-icon)). |
 | `macos-app/macos/HL7DecoderMac-macOS/HL7MacBridge.m` | Native module for the clipboard (`NSPasteboard`) and the Open panel (`NSOpenPanel`). Files are read off the main thread; UTF-8, UTF-16 and UTF-32 with a byte-order mark, plain UTF-8 and Latin-1 are all read correctly. |
 | `macos-app/macos/HL7DecoderMac-macOS/HL7DecoderMac.entitlements` | Debug entitlements: App Sandbox, read access to files the user picks, and network access to reach Metro. |
 | `macos-app/macos/HL7DecoderMac-macOS/HL7DecoderMac-Release.entitlements` | Release entitlements: the same without network access, since the JavaScript is bundled and the app never goes online. |
@@ -65,6 +66,22 @@ npm run bundle              # writes build/main.jsbundle
 Expo modules are not used on macOS. Their macOS support is experimental and tied to Expo SDK versions that match React Native 0.83, so the three things the screen needs from the platform (read the clipboard, write the clipboard, open files) go through the small native module instead.
 
 `src/ui/theme.ts` uses Menlo for monospaced text on macOS as on iOS.
+
+## App icon
+
+<img src="../macos-app/macos/HL7DecoderMac-macOS/Assets.xcassets/AppIcon.appiconset/icon_256x256.png" alt="The HL7 Decoder icon" width="128">
+
+The icon is "HL7" in white on the app's teal, over a strip in the four colours the app uses for HL7 delimiters (`|` blue, `^` orange, `~` purple, `&` green). It follows Apple's macOS icon grid: an 824-pixel rounded square with a soft shadow on a 1024-pixel canvas.
+
+The PNGs are generated, so change the design in `tools/make_icon.py` rather than editing them:
+
+```bash
+python3 -m pip install pillow
+python3 tools/make_icon.py                     # uses Inter Display ExtraBold from /usr/share/fonts
+python3 tools/make_icon.py ~/Library/Fonts/InterDisplay-ExtraBold.otf   # or point it at a copy of the font
+```
+
+It writes all ten sizes (16 to 512 points, at 1x and 2x) into the icon set and updates its `Contents.json`. Inter is free under the SIL Open Font Licence from [rsms.me/inter](https://rsms.me/inter). Rebuild the app afterwards; macOS caches icons, so if the Dock still shows the old one, run `killall Dock`.
 
 ## Keeping the targets in step
 

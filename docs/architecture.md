@@ -9,6 +9,7 @@ src/hl7/                the decoding engine (no React)
 src/hl7/schema/*.json   HL7 definitions, generated
 src/samples.ts          example messages shown on first launch
 tools/build_schema.py   regenerates src/hl7/schema/*.json
+tools/make_icon.py      draws the macOS app icon (see macos.md)
 __tests__/              Jest tests for the engine
 samples/                the same example messages as files, used by tests
 ```
