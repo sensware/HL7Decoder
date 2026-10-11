@@ -1,12 +1,12 @@
-# What we learned from HL7 Soup
+# What we learned from Legacy HL7 Decoder
 
-The reference app was the `HL7 Soup 4.0` installer (`hl7 soup.msi`, Popokey Limited, built with WiX 5).
+The reference app was the Legacy HL7 Decoder 4.0 installer (the `.msi` in the project files, Popokey Limited, built with WiX 5).
 
 ## How it was taken apart
 
-1. `msiextract` unpacked the MSI: `Program Files/Popokey/HL7 Soup/` (the app), `Simple Code Editor Soup/`, and `DataTables/` (CSV code tables and fake-patient data used by its message generator).
-2. The main binaries are .NET Framework 4.8 WPF assemblies: `HL7Soup.exe` (UI, 323 types) and `HL7SoupWorkflow.dll` (engine, 318 types). They were listed and decompiled with ILSpy (`ilspycmd`) to study structure and behaviour only; no HL7 Soup code is copied into this app.
-3. `HL7SoupWorkflow.dll` embeds its HL7 definitions as resources: HL7's own v2.xml XSDs (`fields.xsd`, `segments.xsd`, `datatypes.xsd`, and one file per message structure) for v2.1 to v2.9.
+1. `msiextract` unpacked the MSI: the app's folder under `Program Files/Popokey/`, a bundled code-editor folder, and `DataTables/` (CSV code tables and fake-patient data used by its message generator).
+2. The main binaries are .NET Framework 4.8 WPF assemblies: the main `.exe` (UI, 323 types) and the workflow engine `.dll` (318 types). They were listed and decompiled with ILSpy (`ilspycmd`) to study structure and behaviour only; no Legacy HL7 Decoder code is copied into this app.
+3. The workflow engine DLL embeds its HL7 definitions as resources: HL7's own v2.xml XSDs (`fields.xsd`, `segments.xsd`, `datatypes.xsd`, and one file per message structure) for v2.1 to v2.9.
 
 ## Architecture worth copying
 
@@ -27,4 +27,4 @@ The reference app was the `HL7 Soup 4.0` installer (`hl7 soup.msi`, Popokey Limi
 
 ## Deliberately left out
 
-HL7 Soup is also an integration engine (MLLP/HTTP/database senders and receivers, workflows, transformers, anonymiser, message generator, AI assistant, Mirth conversion). This app is the decoder part only.
+Legacy HL7 Decoder is also an integration engine (MLLP/HTTP/database senders and receivers, workflows, transformers, anonymiser, message generator, AI assistant, Mirth conversion). This app is the decoder part only.
