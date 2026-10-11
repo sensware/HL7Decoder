@@ -4,14 +4,14 @@ A React Native (Expo) app for reading HL7 v2 messages. Paste or open a message a
 
 ![HL7 Decoder on web](docs/images/overview.png)
 
-It runs on iOS, Android and the web from one codebase. Its behaviour is modelled on HL7 Soup's message editor.
+It runs on iOS, Android and the web from one codebase.
 
 ## Documentation
 
 - [User guide](docs/user-guide.md): how to use the app
 - [Code guide](docs/architecture.md): how the engine and UI fit together, and how to extend them
 - [Tests](docs/testing.md): what each test suite covers and how to add tests
-- [Reverse engineering notes](docs/reverse-engineering.md): what was learned from HL7 Soup
+- [Reverse engineering notes](docs/reverse-engineering.md): what was learned from legacy HL7Decoder
 
 ## Features
 
@@ -60,4 +60,4 @@ summaryText(msg);                                 // "ADT message: Admit/visit n
 
 ## Data sources
 
-Segment, field, datatype and message-structure definitions come from HL7 International's v2.xml XML schemas (© Health Level Seven International), and code-table values from HL7 v2 tables. Both were taken from the HL7 Soup installer's resources by `tools/build_schema.py`. Check HL7's licence terms before redistributing the app outside your organisation.
+Segment, field, datatype and message-structure definitions come from HL7 International's v2.xml XML schemas (© Health Level Seven International), and code-table values from HL7 v2 tables. Both were taken from HL7 by `tools/build_schema.py`. Check HL7's licence terms before redistributing the app outside your organisation.
