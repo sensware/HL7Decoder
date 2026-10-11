@@ -70,9 +70,9 @@ To regenerate the JSON, extract the HL7 Soup installer (see [reverse-engineering
 python3 tools/build_schema.py <dir with *.Xsd._2._5._1.fields.xsd etc.> <DataTables/HL7 dir> src/hl7/schema
 ```
 
-## The UI (`App.tsx`, `src/ui`)
+## The UI (`src/Decoder.tsx`, `src/ui`)
 
-`App.tsx` owns all state:
+`src/Decoder.tsx` is the single screen and owns all state. `App.tsx` is the Expo entry point and only wraps it in the safe-area provider and status bar; the macOS app registers `Decoder` directly from `macos-app/index.js`.
 
 | State | Purpose |
 | --- | --- |
@@ -98,9 +98,14 @@ Every message is decoded with `useMemo` whenever the list or the options change.
 
 The layout switches at 900px window width: three columns when wider, one stacked column when narrower.
 
+### Platform services (`src/platform`)
+
+The screen reaches the platform only through `src/platform`: `readClipboard`, `writeClipboard`, `pickTextFiles` and the `Screen` root view. `index.tsx` implements them with Expo modules for iOS, Android and web. `index.macos.tsx` implements them for macOS through the `HL7MacBridge` native module (`NSPasteboard` and `NSOpenPanel`). Metro chooses the `.macos.tsx` file when bundling for macOS. See [macos.md](macos.md) for the macOS build.
+
 ## Adding things
 
 - **A summary sentence for another segment:** add a `case` in `summarize` (`src/hl7/summary.ts`) and a test in `__tests__/summary.test.ts`.
 - **A validation rule:** add it to `validate` or one of its helpers in `src/hl7/validator.ts`, give it a severity, and add a test showing it firing and staying quiet.
 - **A readable rendering for another datatype:** add a `case` in `compose` (`src/hl7/readable.ts`).
+- **Something new from the platform** (sharing, saving a file): add a function to both `src/platform/index.tsx` and `src/platform/index.macos.tsx`, with the macOS side in `HL7MacBridge.m`, and a test in `__tests__/platform.macos.test.tsx`.
 - **Another HL7 version:** add its XSDs to the generator's input, rerun it, and add a `LOADERS` entry in `schema.ts`.
