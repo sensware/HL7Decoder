@@ -12,7 +12,7 @@ It runs on iOS, Android, the web and macOS from one codebase. The macOS app is a
 - [Code guide](docs/architecture.md): how the engine and UI fit together, and how to extend them
 - [Tests](docs/testing.md): what each test suite covers and how to add tests
 - [macOS app](docs/macos.md): building and running the native macOS app
-- [Reverse engineering notes](docs/reverse-engineering.md): what was learned from HL7 Soup
+- [Reverse engineering notes](docs/reverse-engineering.md): what was learned from Legacy HL7 Decoder
 
 ## Features
 
@@ -75,4 +75,4 @@ summaryText(msg);                                 // "ADT message: Admit/visit n
 
 ## Data sources
 
-Segment, field, datatype and message-structure definitions come from HL7 International's v2.xml XML schemas (© Health Level Seven International), and code-table values from HL7 v2 tables. Both were taken from the HL7 Soup installer's resources by `tools/build_schema.py`. Check HL7's licence terms before redistributing the app outside your organisation.
+Segment, field, datatype and message-structure definitions come from HL7 International's v2.xml XML schemas (© Health Level Seven International), and code-table values from HL7 v2 tables. Both were taken from the Legacy HL7 Decoder installer's resources by `tools/build_schema.py`. Check HL7's licence terms before redistributing the app outside your organisation.

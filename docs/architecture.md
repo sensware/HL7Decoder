@@ -64,7 +64,7 @@ Written by `tools/build_schema.py`. Keys are kept short to keep the bundle small
 // tables.json: { "0001": { "n": "Administrative Sex", "v": { "F": "Female", ... } } }
 ```
 
-To regenerate the JSON, extract the HL7 Soup installer (see [reverse-engineering.md](reverse-engineering.md)), then run:
+To regenerate the JSON, extract the Legacy HL7 Decoder installer (see [reverse-engineering.md](reverse-engineering.md)), then run:
 
 ```bash
 python3 tools/build_schema.py <dir with *.Xsd._2._5._1.fields.xsd etc.> <DataTables/HL7 dir> src/hl7/schema
