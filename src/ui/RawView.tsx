@@ -4,7 +4,7 @@ import type { Message, Segment } from '../hl7';
 import { colors, mono } from './theme';
 
 /**
- * The message as written, coloured by delimiter like HL7 Soup's editor.
+ * The message as written, coloured by delimiter like Legacy HL7 Decoder's editor.
  * Tapping a segment ID selects the segment; tapping a field selects that field.
  */
 export const RawView = memo(function RawView({ message, selectedPath, onSelect }: {

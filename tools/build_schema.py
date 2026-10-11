@@ -3,8 +3,8 @@
 
 Usage: build_schema.py <xsd_dir> <tables_dir> <out_dir>
 
-<xsd_dir> holds files named like '*.Xsd._2._5._1.fields.xsd' (as found in the HL7 Soup install
-resources) or a plain '<version>/fields.xsd' layout. Output: one JSON file per version (v2.5.1.json ...) plus tables.json, loaded by src/hl7/schema.ts.
+<xsd_dir> holds files named like '*.Xsd._2._5._1.fields.xsd' (as found in the Legacy HL7 Decoder
+install resources) or a plain '<version>/fields.xsd' layout. Output: one JSON file per version (v2.5.1.json ...) plus tables.json, loaded by src/hl7/schema.ts.
 """
 import csv, json, os, re, sys
 import xml.etree.ElementTree as ET
