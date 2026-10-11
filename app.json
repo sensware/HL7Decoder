@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "HL7 Decoder",
+    "slug": "hl7-decoder",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sensware.hl7decoder"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.sensware.hl7decoder"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
