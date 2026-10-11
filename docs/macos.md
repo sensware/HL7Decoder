@@ -8,8 +8,8 @@ The macOS host lives in [`macos-app/`](../macos-app). It is a separate npm proje
 
 | Tool | Version | Notes |
 | --- | --- | --- |
-| macOS | 14 or later | The deployment target is macOS 14.0. Written for macOS 26.5. |
-| Xcode | 26 or later, from the App Store | The full app, not just the Command Line Tools. Open it once to accept the licence, then run `sudo xcode-select -s /Applications/Xcode.app`. |
+| macOS | 14 or later | The deployment target is macOS 14.0. Built and tested on macOS 26.5 with Xcode 26.6. |
+| Xcode | 26 or later, from the App Store | The full app, not just the Command Line Tools. Open it once to accept the licence, then run `sudo xcode-select -s /Applications/Xcode.app` (or `export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` in the shell you build from). |
 | Node.js | 20 or later | |
 | CocoaPods | 1.15 or later | `brew install cocoapods`. Set `export LANG=en_US.UTF-8` in your shell profile or `pod install` fails with an encoding error. |
 
@@ -31,7 +31,16 @@ cd macos-app
 npm run build               # react-native build-macos --mode Release
 ```
 
-Release builds bundle the JavaScript into the app (`main.jsbundle`), so they run without Metro. The app ends up in Xcode's DerivedData folder under `Build/Products/Release/HL7DecoderMac.app`; in Xcode, use **Product › Archive** to export a signed copy. Signing is left at Xcode's "Sign to Run Locally" default. To share the app with other Macs, set your team under **Signing & Capabilities** and notarise the archive.
+Release builds bundle the JavaScript into the app (`main.jsbundle`), so they run without Metro. The app ends up in Xcode's DerivedData folder under `Build/Products/Release/HL7DecoderMac.app`. To build to a known folder instead:
+
+```bash
+cd macos-app/macos
+xcodebuild -workspace HL7DecoderMac.xcworkspace -scheme HL7DecoderMac-macOS \
+  -configuration Release -derivedDataPath build -destination 'platform=macOS' build
+open build/Build/Products/Release/HL7DecoderMac.app
+```
+
+In Xcode, use **Product › Archive** to export a signed copy. Signing is left at Xcode's "Sign to Run Locally" default. To share the app with other Macs, set your team under **Signing & Capabilities** and notarise the archive.
 
 To check that the JavaScript bundles for macOS without building the native app (this needs no Xcode):
 
@@ -61,6 +70,10 @@ Expo modules are not used on macOS. Their macOS support is experimental and tied
 - Shared code in `src/` must only use React Native APIs that exist in both 0.83 and 0.86. Typecheck and tests at the root (`npm run typecheck`, `npm test`) cover the shared code; `npm run bundle` in `macos-app` catches anything Metro cannot resolve for macOS.
 - Anything platform-specific goes in `src/platform/`, with an `index.macos.tsx` counterpart.
 - When `react-native-macos` releases a version matching the Expo app's React Native, the host can move to it by bumping `react-native`, `react-native-macos` and the `@react-native/*` packages in `macos-app/package.json` together, then running `npm install` and `npm run pods`.
+
+## Known gaps
+
+- The placeholder text in **Go to path** does not show on macOS. The box still works: click it, type a path and press Return.
 
 ## Troubleshooting
 
