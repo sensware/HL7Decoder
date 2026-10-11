@@ -4,7 +4,7 @@ A React Native (Expo) app for reading HL7 v2 messages. Paste or open a message a
 
 ![HL7 Decoder on web](docs/images/overview.png)
 
-It runs on iOS, Android, the web and macOS from one codebase. The macOS app is a native app built with React Native for macOS. Its behaviour is modelled on HL7 Soup's message editor.
+It runs on iOS, Android, the web and macOS from one codebase. The macOS app is a native app built with React Native for macOS. Its behaviour is modelled on Legacy HL7 Decoder's message editor.
 
 ## Documentation
 
