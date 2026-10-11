@@ -16,6 +16,7 @@
 
 /* Begin PBXFileReference section */
 		06C5EBF32D587D7BC42C5FB0 /* Pods-HL7DecoderMac-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HL7DecoderMac-macOS.debug.xcconfig"; path = "Target Support Files/Pods-HL7DecoderMac-macOS/Pods-HL7DecoderMac-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		1358E7FDB8EA40CA3B33BF91 /* HL7DecoderMac-Release.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = "HL7DecoderMac-Release.entitlements"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* HL7DecoderMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HL7DecoderMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E4A2F4F4008713FEC42CC6C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = ../PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		514201492437B4B30078DB4F /* HL7DecoderMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HL7DecoderMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -59,6 +60,7 @@
 				514201592437B4B40078DB4F /* HL7DecoderMac.entitlements */,
 				B06758C3D705726FA273C307 /* HL7MacBridge.m */,
 				4E4A2F4F4008713FEC42CC6C /* PrivacyInfo.xcprivacy */,
+				1358E7FDB8EA40CA3B33BF91 /* HL7DecoderMac-Release.entitlements */,
 			);
 			path = "HL7DecoderMac-macOS";
 			sourceTree = "<group>";
@@ -304,7 +306,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "HL7DecoderMac-macOS/HL7DecoderMac.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "HL7DecoderMac-macOS/HL7DecoderMac-Release.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = "HL7DecoderMac-macos/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -56,8 +56,9 @@ npm run bundle              # writes build/main.jsbundle
 | `macos-app/index.js` | Entry point. Registers `Decoder` from `../src/Decoder.tsx` as the root component. |
 | `macos-app/metro.config.js` | Watches the repository root so `../src` is bundled, and resolves every package from `macos-app/node_modules` only, so the shared code never picks up the Expo app's React Native 0.86. |
 | `macos-app/macos/HL7DecoderMac-macOS/AppDelegate.swift` | SwiftUI app with one window that hosts the React Native view. |
-| `macos-app/macos/HL7DecoderMac-macOS/HL7MacBridge.m` | Native module for the clipboard (`NSPasteboard`) and the Open panel (`NSOpenPanel`). |
-| `macos-app/macos/HL7DecoderMac-macOS/HL7DecoderMac.entitlements` | App Sandbox, with read access to files the user picks and network access for Metro in Debug. |
+| `macos-app/macos/HL7DecoderMac-macOS/HL7MacBridge.m` | Native module for the clipboard (`NSPasteboard`) and the Open panel (`NSOpenPanel`). Files are read off the main thread; UTF-8, UTF-16 and UTF-32 with a byte-order mark, plain UTF-8 and Latin-1 are all read correctly. |
+| `macos-app/macos/HL7DecoderMac-macOS/HL7DecoderMac.entitlements` | Debug entitlements: App Sandbox, read access to files the user picks, and network access to reach Metro. |
+| `macos-app/macos/HL7DecoderMac-macOS/HL7DecoderMac-Release.entitlements` | Release entitlements: the same without network access, since the JavaScript is bundled and the app never goes online. |
 | `src/platform/index.tsx` | Clipboard, file picking and the screen wrapper for the Expo targets (expo-clipboard, expo-document-picker, expo-file-system, safe-area-context). |
 | `src/platform/index.macos.tsx` | The same functions for macOS, calling `HL7MacBridge`. Metro picks this file when bundling for the `macos` platform. |
 

@@ -37,6 +37,11 @@ export function Decoder() {
   const [pathInput, setPathInput] = useState('');
   const [notice, setNotice] = useState('');
   const tabScroll = useRef<ScrollView>(null);
+  const noticeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  // The list length as of the latest render. Paste and Open file add messages after an await (the macOS
+  // Open panel is not modal, so the list can change meanwhile), when the `messages` they closed over is stale.
+  const messageCount = useRef(messages.length);
+  messageCount.current = messages.length;
 
   const text = messages[index] ?? '';
   const options = { version: version === 'auto' ? undefined : version, includeEmpty: showEmpty };
@@ -55,7 +60,8 @@ export function Decoder() {
 
   const flash = (msg: string) => {
     setNotice(msg);
-    setTimeout(() => setNotice(''), 3500);
+    clearTimeout(noticeTimer.current);
+    noticeTimer.current = setTimeout(() => setNotice(''), 3500);
   };
 
   const addMessages = (raw: string, source: string) => {
@@ -65,21 +71,31 @@ export function Decoder() {
       return;
     }
     setMessages((m) => [...m, ...found]);
-    setIndex(messages.length);
+    setIndex(messageCount.current);
     setEditing(false);
     setSelectedPath(undefined);
     flash(`Added ${found.length} message${found.length > 1 ? 's' : ''} from ${source}.`);
   };
 
-  const paste = async () => {
-    addMessages(await readClipboard(), 'the clipboard');
+  /** Runs a clipboard or file action, showing its error as a notice instead of failing silently. */
+  const attempt = (action: () => Promise<void>) => () => {
+    action().catch((e: unknown) => flash(e instanceof Error ? e.message : String(e)));
   };
 
-  const openFile = async () => {
+  const paste = attempt(async () => {
+    addMessages(await readClipboard(), 'the clipboard');
+  });
+
+  const openFile = attempt(async () => {
     const files = await pickTextFiles();
     if (!files?.length) return;
     addMessages(files.map((f) => f.text).join('\n'), files.length === 1 ? files[0].name : `${files.length} files`);
-  };
+  });
+
+  const copyJson = attempt(async () => {
+    await writeClipboard(json);
+    flash('JSON copied.');
+  });
 
   const newMessage = () => {
     setMessages((m) => [...m, `MSH|^~\\&|||||||ADT^A01|1|P|2.5.1\nPID|1||`]);
@@ -197,7 +213,7 @@ export function Decoder() {
         <Button small label="Go" onPress={goToPath} />
         <Button small label={showEmpty ? 'Hide empty' : 'Show empty'} onPress={() => setShowEmpty((s) => !s)} active={showEmpty} />
         <VersionPicker version={version} detected={decoded?.schema.version} onChange={setVersion} />
-        {tab === 'json' && <Button small label="Copy JSON" onPress={() => writeClipboard(json).then(() => flash('JSON copied.'))} />}
+        {tab === 'json' && <Button small label="Copy JSON" onPress={copyJson} />}
       </View>
       {decoded ? (
         <ScrollView ref={tabScroll} style={wide ? { flex: 1 } : undefined} nestedScrollEnabled>

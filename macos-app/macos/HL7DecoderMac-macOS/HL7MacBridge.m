@@ -42,7 +42,9 @@ RCT_EXPORT_METHOD(setClipboardString:(NSString *)text resolver:(RCTPromiseResolv
 }
 
 // Resolves to [{ name, text }] for the chosen files, or null if the user cancels.
-// Files are read as UTF-8, falling back to Latin-1 (common for HL7 feeds) when that fails.
+// Files are read off the main thread so large batches don't freeze the window. The encoding is taken
+// from a byte-order mark when there is one (UTF-8, UTF-16 or UTF-32), then UTF-8, then Latin-1 (common
+// for HL7 feeds, and able to read any bytes).
 RCT_EXPORT_METHOD(openTextFiles:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   NSOpenPanel *panel = [NSOpenPanel openPanel];
@@ -57,21 +59,42 @@ RCT_EXPORT_METHOD(openTextFiles:(RCTPromiseResolveBlock)resolve rejecter:(RCTPro
       resolve([NSNull null]);
       return;
     }
-    NSMutableArray *files = [NSMutableArray array];
-    for (NSURL *url in panel.URLs) {
-      NSError *error = nil;
-      NSString *text = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
-      if (!text) {
-        text = [NSString stringWithContentsOfURL:url encoding:NSISOLatin1StringEncoding error:&error];
+    NSArray<NSURL *> *urls = panel.URLs;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+      NSMutableArray *files = [NSMutableArray array];
+      for (NSURL *url in urls) {
+        NSError *error = nil;
+        NSString *text = [HL7MacBridge readText:url error:&error];
+        if (!text) {
+          reject(@"read", [NSString stringWithFormat:@"Could not read %@.", url.lastPathComponent], error);
+          return;
+        }
+        [files addObject:@{ @"name": url.lastPathComponent, @"text": text }];
       }
-      if (!text) {
-        reject(@"read", [NSString stringWithFormat:@"Could not read %@.", url.lastPathComponent], error);
-        return;
-      }
-      [files addObject:@{ @"name": url.lastPathComponent, @"text": text }];
-    }
-    resolve(files);
+      resolve(files);
+    });
   }];
+}
+
++ (NSString *)readText:(NSURL *)url error:(NSError **)error
+{
+  NSData *data = [NSData dataWithContentsOfURL:url options:0 error:error];
+  if (!data) return nil;
+  const uint8_t *b = data.bytes;
+  NSUInteger n = data.length;
+  NSStringEncoding bom = 0;
+  NSUInteger skip = 0;
+  if (n >= 3 && b[0] == 0xEF && b[1] == 0xBB && b[2] == 0xBF) { bom = NSUTF8StringEncoding; skip = 3; }
+  else if (n >= 4 && b[0] == 0xFF && b[1] == 0xFE && b[2] == 0 && b[3] == 0) { bom = NSUTF32LittleEndianStringEncoding; skip = 4; }
+  else if (n >= 4 && b[0] == 0 && b[1] == 0 && b[2] == 0xFE && b[3] == 0xFF) { bom = NSUTF32BigEndianStringEncoding; skip = 4; }
+  else if (n >= 2 && b[0] == 0xFF && b[1] == 0xFE) { bom = NSUTF16LittleEndianStringEncoding; skip = 2; }
+  else if (n >= 2 && b[0] == 0xFE && b[1] == 0xFF) { bom = NSUTF16BigEndianStringEncoding; skip = 2; }
+  if (bom) {
+    NSString *text = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(skip, n - skip)] encoding:bom];
+    if (text) return text;
+  }
+  return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
+      ?: [[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding];
 }
 
 @end
