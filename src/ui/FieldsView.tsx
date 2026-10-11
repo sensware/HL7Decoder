@@ -1,14 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { DecodedNode } from '../hl7';
 import { colors, mono, sans } from './theme';
 
-/** Every segment as a collapsible table of fields, components and subcomponents. */
-export function FieldsView({ segments, selectedPath, onSelect }: {
-  segments: DecodedNode[]; selectedPath?: string; onSelect: (path: string) => void;
+/**
+ * Every segment as a collapsible table of fields, components and subcomponents.
+ * When the selection moves to another segment (tapped in the message, or via Go to path),
+ * `scrollTo` is called with that segment's offset so it comes into view.
+ */
+export function FieldsView({ segments, selectedPath, onSelect, scrollTo }: {
+  segments: DecodedNode[]; selectedPath?: string; onSelect: (path: string) => void; scrollTo?: (y: number) => void;
 }) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const selectedSegment = selectedPath?.split('-')[0];
+  const offsets = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    const y = selectedSegment ? offsets.current[selectedSegment] : undefined;
+    if (y !== undefined) scrollTo?.(y);
+  }, [selectedSegment, segments]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const row = (n: DecodedNode, depth: number): React.ReactNode => {
     const selected = n.path === selectedPath;
@@ -43,7 +53,7 @@ export function FieldsView({ segments, selectedPath, onSelect }: {
         // A selected field always shows its segment, even if it was collapsed.
         const isCollapsed = collapsed[seg.path] && selectedSegment !== seg.path;
         return (
-          <View key={seg.path} style={styles.segment}>
+          <View key={seg.path} style={styles.segment} onLayout={(e) => { offsets.current[seg.path] = e.nativeEvent.layout.y; }}>
             <Pressable
               onPress={() => setCollapsed((c) => ({ ...c, [seg.path]: !isCollapsed }))}
               onLongPress={() => onSelect(seg.path)}

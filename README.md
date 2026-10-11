@@ -2,9 +2,16 @@
 
 A React Native (Expo) app for reading HL7 v2 messages. Paste or open a message and it shows every segment, field, component and subcomponent with its name, datatype and meaning, a plain-English summary, and validation against the HL7 definitions for the message's version.
 
-![HL7 Decoder on web](docs/screenshot.png)
+![HL7 Decoder on web](docs/images/overview.png)
 
-It runs on iOS, Android and the web from one codebase. Its behaviour is modelled on HL7 Soup's message editor; see [docs/reverse-engineering.md](docs/reverse-engineering.md) for what was learned from it.
+It runs on iOS, Android and the web from one codebase. Its behaviour is modelled on HL7 Soup's message editor.
+
+## Documentation
+
+- [User guide](docs/user-guide.md): how to use the app
+- [Code guide](docs/architecture.md): how the engine and UI fit together, and how to extend them
+- [Tests](docs/testing.md): what each test suite covers and how to add tests
+- [Reverse engineering notes](docs/reverse-engineering.md): what was learned from HL7 Soup
 
 ## Features
 
@@ -24,7 +31,7 @@ npm install
 npm run web        # browser
 npm run ios        # iOS simulator / Expo Go
 npm run android    # Android emulator / Expo Go
-npm test           # decoder tests
+npm test           # engine tests (63)
 npm run typecheck
 ```
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -28,6 +28,14 @@ export default function App() {
   );
 }
 
+/**
+ * The single screen. State lives here: the list of message texts, which one is open, the selected
+ * path, the active tab and the decode options. Every message is decoded on change (they are small)
+ * so the list can show a status dot for each.
+ *
+ * Layout: at 900px and wider, three columns (message list | message + details | tabs);
+ * narrower screens stack them in one scrolling column with the list as horizontal chips.
+ */
 function Decoder() {
   const { width } = useWindowDimensions();
   const wide = width >= 900;
@@ -41,6 +49,7 @@ function Decoder() {
   const [selectedPath, setSelectedPath] = useState<string | undefined>('PID-5');
   const [pathInput, setPathInput] = useState('');
   const [notice, setNotice] = useState('');
+  const tabScroll = useRef<ScrollView>(null);
 
   const text = messages[index] ?? '';
   const options = { version: version === 'auto' ? undefined : version, includeEmpty: showEmpty };
@@ -207,8 +216,12 @@ function Decoder() {
         {tab === 'json' && <Button small label="Copy JSON" onPress={() => Clipboard.setStringAsync(json).then(() => flash('JSON copied.'))} />}
       </View>
       {decoded ? (
-        <ScrollView style={wide ? { flex: 1 } : undefined} nestedScrollEnabled>
-          {tab === 'fields' && <FieldsView segments={decoded.segments} selectedPath={selectedPath} onSelect={select} />}
+        <ScrollView ref={tabScroll} style={wide ? { flex: 1 } : undefined} nestedScrollEnabled>
+          {tab === 'fields' && (
+            <FieldsView segments={decoded.segments} selectedPath={selectedPath} onSelect={select}
+              // On phones the whole page scrolls instead, so only scroll the tab in the wide layout.
+              scrollTo={wide ? (y) => tabScroll.current?.scrollTo({ y, animated: true }) : undefined} />
+          )}
           {tab === 'summary' && <SummaryView lines={summary} onSelect={select} />}
           {tab === 'issues' && <IssuesView issues={current.issues} onSelect={select} />}
           {tab === 'json' && <ScrollView horizontal><Text selectable style={styles.json}>{json}</Text></ScrollView>}
@@ -243,6 +256,7 @@ function Decoder() {
   );
 }
 
+/** Drop-down for forcing a schema version; "Auto" uses MSH-12. */
 function VersionPicker({ version, detected, onChange }: { version: string; detected?: string; onChange: (v: string) => void }) {
   const [open, setOpen] = useState(false);
   return (

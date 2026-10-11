@@ -19,7 +19,17 @@ export interface ValidationIssue {
 const issue = (severity: Severity, path: string, message: string, start = -1, length = 0): ValidationIssue =>
   ({ severity, path, message, start, length });
 
-/** Checks a message against its version's definitions. */
+/**
+ * Checks a decoded message against the definitions for its version.
+ *
+ * Errors: no MSH first, invalid segment IDs, empty required fields, required segments missing from
+ * the message structure. Warnings: unknown segments, segments outside the structure, malformed
+ * NM/SI/DT/DTM/TS/TM values, non-repeating fields that repeat, data past the last defined field.
+ * Info: codes not in an HL7 table (tables follow the latest release, so older codes may be fine),
+ * withdrawn fields with data, and version fallbacks. Z-segments are never flagged.
+ *
+ * @returns Issues in the order found, each with a path and (when it points at text) an offset.
+ */
 export function validate(decoded: DecodedMessage): ValidationIssue[] {
   const { message: msg, schema } = decoded;
   const issues: ValidationIssue[] = [];

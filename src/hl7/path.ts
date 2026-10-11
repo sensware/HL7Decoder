@@ -16,6 +16,11 @@ export interface HL7Path {
 
 const PATH_RE = /^\s*([A-Z0-9]{3})(?:\[(\d+)\])?(?:[-.](\d+)(?:\[(\d+)\])?(?:\.(\d+)(?:\.(\d+))?)?)?\s*$/i;
 
+/**
+ * Parses a path. Accepts `-` or `.` after the segment and is case-insensitive.
+ * @returns `null` when the text is not a path.
+ * @example parsePath('obx[2]-5') // { segment: 'OBX', segmentOccurrence: 2, field: 5, ... }
+ */
 export function parsePath(text: string): HL7Path | null {
   const m = PATH_RE.exec(text ?? '');
   if (!m) return null;
@@ -30,6 +35,7 @@ export function parsePath(text: string): HL7Path | null {
   };
 }
 
+/** Writes a path in canonical form, omitting defaults: `PID-3[2].4`, `OBX[2]-5`. */
 export function formatPath(p: HL7Path): string {
   let s = p.segment;
   if (p.segmentOccurrence > 1) s += `[${p.segmentOccurrence}]`;

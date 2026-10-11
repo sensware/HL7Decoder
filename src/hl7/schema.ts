@@ -55,10 +55,13 @@ const LOADERS: Record<string, () => RawVersion> = {
   '2.9': () => require('./schema/v2.9.json'),
 };
 
+/** HL7 versions with bundled definitions, oldest first. */
 export const VERSIONS = Object.keys(LOADERS);
+/** Used when MSH-12 is missing or unreadable. */
 export const DEFAULT_VERSION = '2.5.1';
 
 let tablesCache: Record<string, TableDef> | null = null;
+/** All code tables keyed by 4-digit ID ("0001"). Loaded on first use. */
 export function tables(): Record<string, TableDef> {
   if (!tablesCache) {
     const raw: Record<string, { n?: string; v?: Record<string, string> }> = require('./schema/tables.json');
@@ -68,11 +71,17 @@ export function tables(): Record<string, TableDef> {
   return tablesCache;
 }
 
+/** One code table; accepts "0001" or "HL70001". */
 export function table(id?: string | null): TableDef | undefined {
   if (!id) return undefined;
   return tables()[id.replace(/^HL7/i, '')];
 }
 
+/**
+ * Looks a code up in an HL7 table.
+ * @returns The description, or `undefined` when the table or code is unknown.
+ * @example lookupTable('0001', 'F') // 'Female'
+ */
 export function lookupTable(tableId: string | undefined | null, value: string | undefined | null): string | undefined {
   if (!value) return undefined;
   const d = table(tableId)?.values[value];
@@ -116,6 +125,9 @@ const STRUCTURE_ALIASES: Record<string, string> = {
   MDM_T08: 'MDM_T02', MDM_T10: 'MDM_T02',
 };
 
+/**
+ * The definitions for one HL7 version. Get one with `Schema.for(version)`; instances are cached.
+ */
 export class Schema {
   readonly version: string;
   private readonly segments: Record<string, FieldDef[]> = {};

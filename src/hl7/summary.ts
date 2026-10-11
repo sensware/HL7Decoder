@@ -9,6 +9,7 @@ const first = (...values: Array<string | undefined | null>) => (values.find((v) 
 const join = (sep: string, ...parts: string[]) => parts.filter((p) => p && p.trim()).join(sep);
 const suffix = (s: string) => (s ? ` - ${s}` : '');
 const truncate = (s: string, max: number) => (s.length <= max ? s : s.slice(0, max - 1) + '…');
+/** Formats an HL7 date/time for prose, or '' when it isn't one. */
 export const dateText = (v?: string) => (v ? formatHl7Date(v) ?? '' : '');
 const dated = (v: string, word = 'on') => (dateText(v) ? ` ${word} ${dateText(v)}` : '');
 const code = (c: string, text: string) => (c && text && c !== text ? ` [${c}]` : '');
@@ -38,7 +39,13 @@ export interface SummaryLine {
   flagged?: boolean;
 }
 
-/** Builds a short plain-English account of what a message says. */
+/**
+ * Builds a plain-English account of what a message says, one line per meaningful segment:
+ * sender and time, patient, visit, orders, tests and results (abnormal ones flagged),
+ * allergies, diagnoses, procedures, appointments, insurance, ACK outcomes and errors.
+ * Segments it has nothing to say about are skipped.
+ * @returns Lines in message order; each links back to its segment so a viewer can jump there.
+ */
 export function summarize(msg: Message): SummaryLine[] {
   const lines: SummaryLine[] = [];
   const add = (text: string, segment?: Segment, indent = false, flagged = false) => {
@@ -224,5 +231,6 @@ function observation(obx: Segment): SummaryLine {
   };
 }
 
+/** The summary as plain text, one line per item, results indented. */
 export const summaryText = (msg: Message) =>
   summarize(msg).map((l) => (l.indent ? '  ' : '') + l.text).join('\n');

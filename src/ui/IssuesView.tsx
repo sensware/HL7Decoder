@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { ValidationIssue } from '../hl7';
 import { colors, mono, severityColor, severitySoft } from './theme';
 
+/** Validation results as a list; tapping one selects its path in the message. */
 export function IssuesView({ issues, onSelect }: { issues: ValidationIssue[]; onSelect: (path: string) => void }) {
   if (issues.length === 0) return <Text style={styles.ok}>No problems found.</Text>;
   return (

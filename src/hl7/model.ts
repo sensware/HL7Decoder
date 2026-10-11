@@ -155,8 +155,21 @@ function splitLines(text: string): Array<[number, number]> {
 const isWs = (c: string) => c === ' ' || c === '\t' || c === '\f' || c === '\v';
 
 /**
- * Parses one message. Segments may be separated by CR, LF or CRLF; MLLP framing is tolerated.
- * Offsets on every element refer to `text` as given, so a viewer can highlight what was tapped.
+ * Parses one message into segments, fields, repetitions, components and subcomponents.
+ *
+ * - Segments may be separated by CR (the HL7 standard), LF or CRLF; blank lines, indentation
+ *   and MLLP framing characters (0x0B, 0x1C) are ignored.
+ * - Delimiters are read from MSH-1/MSH-2, so messages using unusual separators parse correctly.
+ * - Every element keeps its `raw` text and `start` offset into `text` exactly as given, so a viewer
+ *   can highlight what was tapped. `value` has escape sequences decoded.
+ * - Nothing throws: malformed input yields whatever segments could be read; use {@link validate}
+ *   to find out what is wrong.
+ *
+ * @param text One message. Use {@link splitMessages} first if the text may hold several.
+ * @example
+ * const msg = parseMessage('MSH|^~\\&|APP|FAC|||20240101||ADT^A01|1|P|2.5.1\rPID|1||123||Doe^John');
+ * msg.messageType          // 'ADT^A01'
+ * getValue(msg, 'PID-5.2') // 'John'
  */
 export function parseMessage(text: string): Message {
   text = text ?? '';
@@ -201,7 +214,16 @@ export function parseMessage(text: string): Message {
   };
 }
 
-/** Value of a field/component/subcomponent in a segment (first repetition unless given); '' when absent. */
+/**
+ * Reads a value from a segment by number. Zero for `component` or `sub` means "the whole thing".
+ * Values are returned with escape sequences decoded.
+ * @param seg The segment.
+ * @param field Field number (MSH-1 is the field separator).
+ * @param component Component number, or 0 for the whole repetition.
+ * @param sub Subcomponent number, or 0 for the whole component.
+ * @param repetition Which repeat of the field (1-based).
+ * @returns The value, or '' when absent.
+ */
 export function segmentValue(seg: Segment, field: number, component = 0, sub = 0, repetition = 1): string {
   const rep = seg.fields[field - 1]?.repetitions[repetition - 1];
   if (!rep) return '';
@@ -212,11 +234,16 @@ export function segmentValue(seg: Segment, field: number, component = 0, sub = 0
   return comp.subComponents[sub - 1]?.value ?? '';
 }
 
+/** The `occurrence`-th segment with this ID (1-based), e.g. the second OBX. */
 export function getSegment(msg: Message, name: string, occurrence = 1): Segment | undefined {
   return msg.segments.filter((s) => s.name === name)[occurrence - 1];
 }
 
-/** Reads a value by path, e.g. "PID-5.1", "OBX[2]-5", "PID-3[2].4.1". */
+/**
+ * Reads a decoded value by path.
+ * @param path e.g. `PID-5.1`, `OBX[2]-5` (second OBX), `PID-3[2].4.1` (second repeat of PID-3), or a parsed path.
+ * @returns The value, or '' when the path is invalid or the message has nothing there.
+ */
 export function getValue(msg: Message, path: string | HL7Path): string {
   const p = typeof path === 'string' ? parsePath(path) : path;
   return p ? readPath(msg, p) ?? '' : '';
@@ -248,6 +275,7 @@ export function splitMessages(text: string): string[] {
   return result;
 }
 
+/** Quick check that text starts with an MSH, FHS or BHS header (after optional MLLP framing). */
 export function looksLikeHl7(text: string): boolean {
   const t = text.trimStart().replace(/^\x0b/, '');
   return t.length > 8 && isHeaderId(t.slice(0, 3));

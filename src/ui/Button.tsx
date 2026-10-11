@@ -1,6 +1,12 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { colors } from './theme';
 
+/**
+ * Toolbar/action button.
+ * @param primary Filled accent style for the main action.
+ * @param small Compact size used inside cards.
+ * @param active Filled style to show a toggle is on.
+ */
 export function Button({ label, onPress, primary, small, active }: {
   label: string; onPress: () => void; primary?: boolean; small?: boolean; active?: boolean;
 }) {

@@ -1,6 +1,9 @@
 import type { DecodedMessage, DecodedNode } from './decoder';
 
-/** The decoded message as JSON, with names and meanings alongside values. */
+/**
+ * The decoded message as indented JSON: message type, versions, and for each segment its fields
+ * (and their parts) with path, name, type, value, meaning and table.
+ */
 export function toJson(decoded: DecodedMessage): string {
   const node = (n: DecodedNode): Record<string, unknown> => {
     const o: Record<string, unknown> = { path: n.path, name: n.name };

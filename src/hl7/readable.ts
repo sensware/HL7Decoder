@@ -3,11 +3,19 @@ import { formatHl7Date } from './datetime';
 
 const join = (sep: string, parts: string[]) => parts.filter((p) => p.length > 0).join(sep);
 
+/** Joins name parts in reading order: prefix, given, middle, family, suffix, degree. */
 export function personName(family: string, given: string, middle: string, suffix: string, prefix: string, degree: string): string {
   return join(' ', [prefix, given, middle, family, suffix, degree]);
 }
 
-/** Readable one-line renderings of common composite values (names, addresses, phones). */
+/**
+ * Renders a composite value as one readable line, for the "meaning" column and the summary.
+ * Handles names (XPN, XCN), addresses (XAD), phones (XTN), locations (PL), timestamps and quantities.
+ * @param type The HL7 datatype of the value.
+ * @param rep One repetition of the field.
+ * @returns The text, or `undefined` for types it does not know or values with nothing to show.
+ * @example compose('XPN', <Doe^John^Q^Jr^Dr>) // 'Dr John Q Doe Jr'
+ */
 export function compose(type: string, rep?: Repetition): string | undefined {
   if (!rep) return undefined;
   const c = (n: number) => (rep.components[n - 1]?.subComponents[0].value ?? '').trim();

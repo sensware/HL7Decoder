@@ -60,6 +60,7 @@ const NAMES: Record<string, string> = {
   VTQ: 'Virtual Table Query Request',
 };
 
+/** Plain-English name for a segment ID; Z-segments are reported as custom. */
 export function segmentName(id: string): string {
   return NAMES[id] ?? (id.startsWith('Z') ? 'Custom (Z) segment' : 'Unknown segment');
 }

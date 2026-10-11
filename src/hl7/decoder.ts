@@ -51,7 +51,10 @@ export interface DecodedMessage {
 
 const CODED = new Set(['CE', 'CWE', 'CNE', 'CF', 'ID', 'IS']);
 
-/** Event text without the "ADT/ACK - " prefix table 0003 puts on many entries. */
+/**
+ * Describes a trigger event from HL7 table 0003, without the "ADT/ACK - " prefix many entries carry.
+ * @example eventDescription('A01') // 'Admit/visit notification'
+ */
 export function eventDescription(trigger: string): string {
   let evt = lookupTable('0003', trigger) ?? trigger;
   const dash = evt.indexOf(' - ');
@@ -59,6 +62,10 @@ export function eventDescription(trigger: string): string {
   return evt.trim();
 }
 
+/**
+ * A one-line title for a message from MSH-9, using tables 0076 (message type) and 0003 (event).
+ * @example describeMessageType(parseMessage(adt)) // 'ADT message: Admit/visit notification'
+ */
 export function describeMessageType(msg: Message): string {
   const code = lookupTable('0076', msg.messageCode) ?? msg.messageCode;
   if (!code) return 'HL7 message';
@@ -67,6 +74,19 @@ export function describeMessageType(msg: Message): string {
   return !evt || evt.toLowerCase() === code.toLowerCase() ? code : `${code}: ${evt}`;
 }
 
+/**
+ * Labels every part of a parsed message using the HL7 definitions for its version.
+ *
+ * For each segment, field, repetition, component and subcomponent this adds the definition's name,
+ * datatype, table and required/repeating flags, plus a human-friendly `meaning`: a code-table
+ * description, a formatted date, or a readable name/address/phone. `OBX-5` (datatype "varies")
+ * takes its datatype from `OBX-2`.
+ *
+ * @param message Result of {@link parseMessage}.
+ * @param options `version` forces a schema instead of MSH-12; `includeEmpty` also returns defined but
+ *   absent fields and components (with `present: false`), as the "Show empty" toggle does.
+ * @returns The labelled tree, the schema used and a title.
+ */
 export function decodeMessage(message: Message, options: DecodeOptions = {}): DecodedMessage {
   const schema = Schema.for(options.version || message.version);
   const includeEmpty = !!options.includeEmpty;
@@ -203,6 +223,7 @@ export function decodeMessage(message: Message, options: DecodeOptions = {}): De
   return { message, schema, title: describeMessageType(message), segments: message.segments.map(decodeSegment) };
 }
 
+/** Visits nodes depth-first, parents before children. */
 export function* walk(nodes: DecodedNode[]): Generator<DecodedNode> {
   for (const n of nodes) {
     yield n;
@@ -210,13 +231,21 @@ export function* walk(nodes: DecodedNode[]): Generator<DecodedNode> {
   }
 }
 
+/**
+ * Finds a node by its path, ignoring case.
+ * @returns `undefined` when the message has nothing at that path (or it is empty and empties were not included).
+ * @example findNode(decoded, 'PID-5.1')?.value // 'Doe'
+ */
 export function findNode(decoded: DecodedMessage, path: string): DecodedNode | undefined {
   const p = path.trim().toUpperCase();
   for (const n of walk(decoded.segments)) if (n.path.toUpperCase() === p) return n;
   return undefined;
 }
 
-/** The deepest node covering a text offset. */
+/**
+ * The deepest node covering a character offset in the original text.
+ * Used to turn a tap or caret position into a path.
+ */
 export function nodeAt(decoded: DecodedMessage, offset: number): DecodedNode | undefined {
   let best: DecodedNode | undefined;
   for (const n of walk(decoded.segments)) {
@@ -225,6 +254,7 @@ export function nodeAt(decoded: DecodedMessage, offset: number): DecodedNode | u
   return best;
 }
 
+/** The name of an HL7 table, e.g. `tableName('0001')` is 'Administrative Sex'. */
 export function tableName(id?: string): string | undefined {
   return table(id)?.name || undefined;
 }

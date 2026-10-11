@@ -1,6 +1,13 @@
 import { Delimiters } from './delimiters';
 
-/** Converts HL7 escape sequences (\F\, \S\, \X0D\, \.br\ ...) to plain text. Unknown sequences are kept. */
+/**
+ * Converts HL7 escape sequences to plain text.
+ *
+ * Handles delimiter escapes (`\F\ \S\ \T\ \R\ \E\`), hex (`\X0D0A\`), line breaks (`\.br\`, `\.sp\`)
+ * and drops highlight/formatting markers. Unknown sequences (`\Zxx\`, character-set switches) are
+ * kept as written so nothing is silently lost.
+ * @example decodeEscapes('A \\T\\ B', DEFAULT_DELIMITERS) // 'A & B'
+ */
 export function decodeEscapes(raw: string, d: Delimiters): string {
   if (!raw.includes(d.escape)) return raw;
   let out = '';
@@ -43,6 +50,10 @@ function decodeSequence(seq: string, d: Delimiters): string | null {
   return null; // \Cxxyy\, \Mxxyyzz\, \Zxx\ and anything unknown
 }
 
+/**
+ * The reverse of {@link decodeEscapes}: escapes delimiter characters and line breaks so `text`
+ * can be placed inside a field.
+ */
 export function encodeEscapes(text: string, d: Delimiters): string {
   let out = '';
   for (const c of text) {

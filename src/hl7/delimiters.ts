@@ -16,7 +16,12 @@ export const DEFAULT_DELIMITERS: Delimiters = {
   subComponent: '&',
 };
 
-/** Reads the delimiters from the start of an MSH, FHS or BHS segment. */
+/**
+ * Reads the delimiters a message declares at the start of its MSH, FHS or BHS segment.
+ * MSH-1 is the character after "MSH"; MSH-2 lists component, repetition, escape, subcomponent
+ * and (from v2.7) truncation characters. Missing characters fall back to the HL7 defaults.
+ * @example delimitersFromHeader('MSH|^~\\&|...').component // '^'
+ */
 export function delimitersFromHeader(header: string): Delimiters {
   if (header.length < 4) return DEFAULT_DELIMITERS;
   const field = header[3];
