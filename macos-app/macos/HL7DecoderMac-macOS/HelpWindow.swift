@@ -31,6 +31,8 @@ struct HelpWindow: View {
 }
 
 /// A web view on the bundled help page. Links within the page scroll it; links elsewhere open in the browser.
+/// WebKit runs pages in helper processes that quit at launch in a sandboxed app without the
+/// com.apple.security.network.client entitlement, leaving the window blank, so both entitlements files have it.
 struct HelpWebView: NSViewRepresentable {
   let page: URL
 
