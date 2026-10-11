@@ -18,6 +18,7 @@ Tests use Jest with the `jest-expo` preset and cover the engine in `src/hl7` and
 | `__tests__/validator.test.ts` | `validator.ts` | Each rule fires on a bad message. A valid message has no errors or warnings. Offsets point at the offending text. |
 | `__tests__/summary.test.ts` | `summary.ts`, `jsonExport.ts` | Sender, patient and visit sentences. Results under their test, with abnormal ones flagged. ACK errors explained. Lines linked to their segments. JSON contents. Finally, every file in `samples/` goes through decode, validate, summary and export without throwing. |
 | `__tests__/platform.macos.test.tsx` | `src/platform/index.macos.tsx` | With a stand-in for the `HL7MacBridge` native module: clipboard reads (an empty pasteboard reads as empty text) and writes, picked files and a cancelled Open panel, and a clear error if the native module is missing. |
+| `__tests__/help.test.ts` | `tools/build_help.js` | The macOS Help page matches `docs/user-guide.md` (it fails until you rerun `node tools/build_help.js` after editing the guide). It bundles exactly the screenshots it shows, says click instead of tap, and links every section. The small Markdown reader renders tables, escaped pipes, code, lists, emphasis, images and links. |
 | `__tests__/helpers.ts` | — | Shared fixtures: `ADT` (a small valid admit message), `message(type, version, ...segments)` to build one, and `sample(name)` to read `samples/`. |
 
 ## Writing a test
@@ -51,3 +52,4 @@ For changes to `src/` or `src/platform`, also check the macOS app (see [macos.md
 1. `cd macos-app && npm run bundle` to confirm the shared code still bundles for macOS.
 2. `npm run macos`, load **Samples** and repeat the steps above.
 3. Copy an HL7 message from another app and press **Paste**; open a file from `samples/` with **Open file**; press **Copy JSON** and paste into TextEdit.
+4. Choose **Help › HL7 Decoder Help** (or press ⌘?): the guide opens in its own window with screenshots, the contents links scroll to each section, and a link to GitHub opens in the browser.

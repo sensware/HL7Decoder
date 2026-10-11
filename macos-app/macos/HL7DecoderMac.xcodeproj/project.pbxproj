@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1B2C3D4E5F60718293A4B01 /* HelpWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B02 /* HelpWindow.swift */; };
+		A1B2C3D4E5F60718293A4B03 /* Help in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B04 /* Help */; };
 		0D73F5E2E45554A93AAAD0CF /* libPods-HL7DecoderMac-macOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 68A39C343E2643418545B1E0 /* libPods-HL7DecoderMac-macOS.a */; };
 		5142014D2437B4B30078DB4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5142014C2437B4B30078DB4F /* AppDelegate.swift */; };
 		514201522437B4B40078DB4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 514201512437B4B40078DB4F /* Assets.xcassets */; };
@@ -15,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A1B2C3D4E5F60718293A4B02 /* HelpWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpWindow.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718293A4B04 /* Help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Help; sourceTree = "<group>"; };
 		06C5EBF32D587D7BC42C5FB0 /* Pods-HL7DecoderMac-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HL7DecoderMac-macOS.debug.xcconfig"; path = "Target Support Files/Pods-HL7DecoderMac-macOS/Pods-HL7DecoderMac-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		1358E7FDB8EA40CA3B33BF91 /* HL7DecoderMac-Release.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = "HL7DecoderMac-Release.entitlements"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* HL7DecoderMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HL7DecoderMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,6 +60,8 @@
 			children = (
 				5142014C2437B4B30078DB4F /* AppDelegate.swift */,
 				514201512437B4B40078DB4F /* Assets.xcassets */,
+				A1B2C3D4E5F60718293A4B02 /* HelpWindow.swift */,
+				A1B2C3D4E5F60718293A4B04 /* Help */,
 				514201562437B4B40078DB4F /* Info.plist */,
 				514201592437B4B40078DB4F /* HL7DecoderMac.entitlements */,
 				B06758C3D705726FA273C307 /* HL7MacBridge.m */,
@@ -169,6 +175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				514201522437B4B40078DB4F /* Assets.xcassets in Resources */,
+				A1B2C3D4E5F60718293A4B03 /* Help in Resources */,
 				64BB6DEB535CD45BA952DEAB /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -268,6 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5142014D2437B4B30078DB4F /* AppDelegate.swift in Sources */,
+				A1B2C3D4E5F60718293A4B01 /* HelpWindow.swift in Sources */,
 				62C9B863ADB5875D6FF663B3 /* HL7MacBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

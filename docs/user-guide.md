@@ -21,6 +21,7 @@ The Mac app works the same way as the others: click wherever this guide says tap
 - **Paste** reads text you copied in any Mac app.
 - **Open file** shows the standard macOS Open panel. Hold ⌘ to pick several files. The app can only read files you choose there.
 - **Copy JSON** puts the JSON on the Mac clipboard, ready to paste into another app.
+- **Help › HL7 Decoder Help** (⌘?) opens this guide in its own window.
 
 To install the Mac app, build it from the source as described in [macos.md](macos.md).
 
