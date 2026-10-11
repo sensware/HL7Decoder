@@ -61,7 +61,7 @@ npm run bundle              # writes build/main.jsbundle
 | `macos-app/macos/HL7DecoderMac-macOS/Help/` | The help page and its screenshots, generated from the user guide by `tools/build_help.js`. Added to the app as a folder, so new files in it are bundled without changing the Xcode project. |
 | `macos-app/macos/HL7DecoderMac-macOS/HL7MacBridge.m` | Native module for the clipboard (`NSPasteboard`) and the Open panel (`NSOpenPanel`). Files are read off the main thread; UTF-8, UTF-16 and UTF-32 with a byte-order mark, plain UTF-8 and Latin-1 are all read correctly. |
 | `macos-app/macos/HL7DecoderMac-macOS/HL7DecoderMac.entitlements` | Debug entitlements: App Sandbox, read access to files the user picks, and network access to reach Metro. |
-| `macos-app/macos/HL7DecoderMac-macOS/HL7DecoderMac-Release.entitlements` | Release entitlements: the same without network access, since the JavaScript is bundled and the app never goes online. |
+| `macos-app/macos/HL7DecoderMac-macOS/HL7DecoderMac-Release.entitlements` | Release entitlements: the same as Debug. The JavaScript is bundled and the app never goes online, but the help window's web view needs `network.client` all the same: in a sandbox without it, WebKit's page process quits at launch and the window stays blank, even for a bundled file. |
 | `src/platform/index.tsx` | Clipboard, file picking and the screen wrapper for the Expo targets (expo-clipboard, expo-document-picker, expo-file-system, safe-area-context). |
 | `src/platform/index.macos.tsx` | The same functions for macOS, calling `HL7MacBridge`. Metro picks this file when bundling for the `macos` platform. |
 
@@ -117,4 +117,5 @@ It writes all ten sizes (16 to 512 points, at 1x and 2x) into the icon set and u
 | `pod install` fails with `Unicode Normalization not appropriate for ASCII-8BIT` | `export LANG=en_US.UTF-8` and run it again. |
 | The app opens with a red "No bundle URL present" screen | Metro isn't running. Run `npm start` in `macos-app`. |
 | `HL7MacBridge native module is missing` | The native app is older than the JavaScript. Rebuild it from Xcode or with `npm run macos`. |
+| `pod install` says not to use CocoaPods and to run `npx expo run:ios` | That notice comes from React Native's pod scripts and is aimed at Expo iOS apps. `npx expo run:ios` cannot build the macOS app, which still needs CocoaPods. `npm run pods` sets `RCT_IGNORE_PODS_DEPRECATION=1` to hide it; if you run `pod install` yourself, set that variable too, or ignore the notice. |
 | Metro reports two copies of React, or `react-native` 0.86 | Run Metro from `macos-app`, not the repository root, so `metro.config.js` there is used. |

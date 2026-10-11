@@ -35,6 +35,14 @@ describe('help page', () => {
     expect(page).not.toContain('images/phone.png');
   });
 
+  it('can be shown by the sandboxed app', () => {
+    // Without network.client, WebKit's page process quits at launch in the sandbox and the help window is blank.
+    for (const name of ['HL7DecoderMac.entitlements', 'HL7DecoderMac-Release.entitlements']) {
+      const plist = fs.readFileSync(path.join(OUT_DIR, '..', name), 'utf8');
+      expect(plist).toMatch(/<key>com\.apple\.security\.network\.client<\/key>\s*<true\/>/);
+    }
+  });
+
   it('has a contents bar linking to every section', () => {
     for (const title of ['Getting messages in', 'Reading a message', 'The tabs', 'HL7 versions', 'Editing', 'Tips']) {
       const id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
