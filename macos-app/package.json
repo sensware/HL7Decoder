@@ -7,7 +7,7 @@
     "start": "react-native start",
     "macos": "react-native run-macos --scheme HL7DecoderMac-macOS",
     "build": "react-native build-macos --scheme HL7DecoderMac-macOS --mode Release",
-    "pods": "pod install --project-directory=macos",
+    "pods": "RCT_IGNORE_PODS_DEPRECATION=1 pod install --project-directory=macos",
     "bundle": "react-native bundle --platform macos --dev false --entry-file index.js --bundle-output build/main.jsbundle"
   },
   "dependencies": {

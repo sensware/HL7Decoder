@@ -117,4 +117,5 @@ It writes all ten sizes (16 to 512 points, at 1x and 2x) into the icon set and u
 | `pod install` fails with `Unicode Normalization not appropriate for ASCII-8BIT` | `export LANG=en_US.UTF-8` and run it again. |
 | The app opens with a red "No bundle URL present" screen | Metro isn't running. Run `npm start` in `macos-app`. |
 | `HL7MacBridge native module is missing` | The native app is older than the JavaScript. Rebuild it from Xcode or with `npm run macos`. |
+| `pod install` says not to use CocoaPods and to run `npx expo run:ios` | That notice comes from React Native's pod scripts and is aimed at Expo iOS apps. `npx expo run:ios` cannot build the macOS app, which still needs CocoaPods. `npm run pods` sets `RCT_IGNORE_PODS_DEPRECATION=1` to hide it; if you run `pod install` yourself, set that variable too, or ignore the notice. |
 | Metro reports two copies of React, or `react-native` 0.86 | Run Metro from `macos-app`, not the repository root, so `metro.config.js` there is used. |
