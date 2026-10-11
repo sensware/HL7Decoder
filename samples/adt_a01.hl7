@@ -1,0 +1,8 @@
+MSH|^~\&|EPICADT|CITYHOSP|LABSYS|CITYLAB|20240105143000||ADT^A01^ADT_A01|MSG00001|P|2.5.1|||AL|NE
+EVN|A01|20240105142500|||JSMITH^Smith^Jane
+PID|1||123456^^^CITYHOSP^MR~987-65-4320^^^USSSA^SS||Doe^John^Quincy^Jr^Mr||19800214|M|||742 Evergreen Terrace^Apt 2^Springfield^IL^62704^USA||(217)555-0101^PRN^PH|||M||ACC1234
+NK1|1|Doe^Mary|SPO^Spouse|742 Evergreen Terrace^^Springfield^IL^62704|(217)555-0102
+PV1|1|I|4W^401^B^CITYHOSP||||1234^Welby^Marcus^^^Dr^MD|||MED||||7|||1234^Welby^Marcus^^^Dr^MD|IN||||||||||||||||||||||||||20240105140000
+AL1|1|DA|PCN^Penicillin^L|SV|Hives
+DG1|1|I10|J18.9^Pneumonia, unspecified organism^I10||20240105|A
+IN1|1|PPO1^Gold PPO|INS001|Acme Health Insurance|PO Box 1^^Chicago^IL^60601||||GRP-55|||||||Doe^John|SEL|19800214|||||||||||||||||POL123456

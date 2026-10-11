@@ -1,0 +1,9 @@
+MSH|^~\&|LABSYS|CITYLAB|EPICADT|CITYHOSP|202401061015||ORU^R01^ORU_R01|LAB778899|P|2.5.1
+PID|1||123456^^^CITYHOSP^MR||Doe^John||19800214|M
+ORC|RE|ORD5566|LAB778899||CM
+OBR|1|ORD5566|LAB778899|CBC^Complete Blood Count^L|||202401060800|||||||||1234^Welby^Marcus^^^Dr^MD||||||202401061010|||F
+OBX|1|NM|WBC^White Blood Cell Count^L||13.2|10*3/uL^thousand per microliter|4.5-11.0|H|||F
+OBX|2|NM|HGB^Hemoglobin^L||14.1|g/dL|13.5-17.5|N|||F
+OBX|3|ST|COMM^Comment^L||Sample slightly hemolyzed \T\ re-run advised\.br\Verified by lab||||||F
+OBX|4|CE|ABO^Blood group^L||A+^A positive^L||||||F
+NTE|1||Results reviewed by pathologist.
