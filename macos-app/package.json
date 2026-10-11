@@ -1,0 +1,30 @@
+{
+  "name": "hl7-decoder-macos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Native macOS host for HL7 Decoder (react-native-macos). Bundles ../src, the same engine and UI the Expo app uses.",
+  "scripts": {
+    "start": "react-native start",
+    "macos": "react-native run-macos --scheme HL7DecoderMac-macOS",
+    "build": "react-native build-macos --scheme HL7DecoderMac-macOS --mode Release",
+    "pods": "pod install --project-directory=macos",
+    "bundle": "react-native bundle --platform macos --dev false --entry-file index.js --bundle-output build/main.jsbundle"
+  },
+  "dependencies": {
+    "react": "19.2.0",
+    "react-native": "0.83.10",
+    "react-native-macos": "0.83.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/runtime": "^7.25.0",
+    "@react-native-community/cli": "20.0.0",
+    "@react-native-community/cli-platform-ios": "20.0.0",
+    "@react-native/babel-preset": "0.83.10",
+    "@react-native/metro-config": "0.83.10"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,6 +1,6 @@
 # HL7 Decoder user guide
 
-HL7 Decoder explains HL7 v2 messages. Paste or open a message and it tells you what every part means, whether anything is wrong, and what the message says in plain English. It runs on phones, tablets and in a web browser.
+HL7 Decoder explains HL7 v2 messages. Paste or open a message and it tells you what every part means, whether anything is wrong, and what the message says in plain English. It runs on phones, tablets, in a web browser and as a Mac app.
 
 ![The app on a wide screen](images/overview.png)
 
@@ -13,6 +13,16 @@ On a wide screen (tablet, laptop) the app has three columns:
 On a phone the same pieces stack in one scrolling column, and the message list becomes a row of cards you swipe sideways.
 
 <img src="images/phone.png" alt="The app on a phone" width="300">
+
+## On a Mac
+
+The Mac app works the same way as the others: click wherever this guide says tap. It opens in a window wide enough for the three-column layout, and narrowing the window below 900 points switches to the stacked layout.
+
+- **Paste** reads text you copied in any Mac app.
+- **Open file** shows the standard macOS Open panel. Hold ⌘ to pick several files. The app can only read files you choose there.
+- **Copy JSON** puts the JSON on the Mac clipboard, ready to paste into another app.
+
+To install the Mac app, build it from the source as described in [macos.md](macos.md).
 
 ## Getting messages in
 

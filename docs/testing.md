@@ -7,7 +7,7 @@ npx jest --watch    # rerun on change
 npm run typecheck   # TypeScript, including the tests
 ```
 
-Tests use Jest with the `jest-expo` preset and cover the engine in `src/hl7`. The UI is checked by hand and in a browser (see below). All test messages are fictional.
+Tests use Jest with the `jest-expo` preset and cover the engine in `src/hl7` and the macOS platform layer. The UI is checked by hand and in a browser (see below). All test messages are fictional.
 
 ## Suites
 
@@ -17,6 +17,7 @@ Tests use Jest with the `jest-expo` preset and cover the engine in `src/hl7`. Th
 | `__tests__/decoder.test.ts` | `decoder.ts`, `schema.ts`, `datetime.ts`, `readable.ts` | Message titles. Field names, types, tables and meanings. Readable names, addresses and dates. Repetitions and components. Offset-to-node lookup. "Show empty". OBX-5 typed by OBX-2. Forced versions. Z-segments. Every bundled version loads, and withdrawn fields keep their numbers. Version fallback. Shared message structures. Date formatting and rejection of bad dates. |
 | `__tests__/validator.test.ts` | `validator.ts` | Each rule fires on a bad message. A valid message has no errors or warnings. Offsets point at the offending text. |
 | `__tests__/summary.test.ts` | `summary.ts`, `jsonExport.ts` | Sender, patient and visit sentences. Results under their test, with abnormal ones flagged. ACK errors explained. Lines linked to their segments. JSON contents. Finally, every file in `samples/` goes through decode, validate, summary and export without throwing. |
+| `__tests__/platform.macos.test.tsx` | `src/platform/index.macos.tsx` | With a stand-in for the `HL7MacBridge` native module: clipboard reads (an empty pasteboard reads as empty text) and writes, picked files and a cancelled Open panel, and a clear error if the native module is missing. |
 | `__tests__/helpers.ts` | — | Shared fixtures: `ADT` (a small valid admit message), `message(type, version, ...segments)` to build one, and `sample(name)` to read `samples/`. |
 
 ## Writing a test
@@ -44,3 +45,9 @@ There are no automated UI tests yet. Before merging UI changes:
 3. Go to `OBX[4]-5` on the lab results message and check that the Fields tab scrolls to it.
 4. Open the broken message and check the Validation tab and the red dot.
 5. Narrow the window below 900px (or use a phone) and repeat.
+
+For changes to `src/` or `src/platform`, also check the macOS app (see [macos.md](macos.md)):
+
+1. `cd macos-app && npm run bundle` to confirm the shared code still bundles for macOS.
+2. `npm run macos`, load **Samples** and repeat the steps above.
+3. Copy an HL7 message from another app and press **Paste**; open a file from `samples/` with **Open file**; press **Copy JSON** and paste into TextEdit.

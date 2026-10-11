@@ -39,6 +39,9 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/__tests__/helpers.ts"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/macos-app/"
     ]
   }
 }

@@ -1,0 +1,9 @@
+node_modules/
+build/
+.bundle/
+vendor/bundle/
+# Xcode
+macos/build/
+xcuserdata/
+DerivedData/
+*.xcuserstate

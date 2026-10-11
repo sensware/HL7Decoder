@@ -26,7 +26,7 @@ export const colors = {
 
 export const sans = Platform.select({ web: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif', default: undefined });
 
-export const mono = Platform.select({ ios: 'Menlo', android: 'monospace', default: 'Consolas, Menlo, monospace' });
+export const mono = Platform.select({ android: 'monospace', web: 'Consolas, Menlo, monospace', default: 'Menlo' });
 
 export const severityColor = { error: colors.error, warning: colors.warning, info: colors.info } as const;
 export const severitySoft = { error: colors.errorSoft, warning: colors.warningSoft, info: colors.infoSoft } as const;
